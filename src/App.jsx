@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
+import { toast } from "react-toastify";
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [newTaskText, setNewTaskText] = useState("");
   const [error, setError] = useState(null);
-  // const apiURL = "http://localhost:3000";
 
-  // IMPORTANT 
-  // connected to real Backend on 16.04.2025
-  const apiURL = "https://todo-api-uwry.onrender.com/todos";
+  // connect to Backend via .env
+  const apiURL = import.meta.env.VITE_BACKEND_URL;
 
   // Daten fetchen aus unserer eigenen API
   const fetchTasks = async () => {
@@ -21,6 +20,8 @@ function App() {
       console.log(tasksArray);
 
       setTasks(tasksArray);
+      // Use of toast
+      toast.success("Todos fetched successfully");
     } catch (error) {
       console.log(error.message);
     }
@@ -43,6 +44,8 @@ function App() {
       await axios.post(`${apiURL}`, {
         todo: newTaskText,
       });
+      // Use of toast
+      toast.info("Todo created");
       fetchTasks();
       setNewTaskText("");
       setError(null);
@@ -56,6 +59,8 @@ function App() {
   const deleteTask = async (id) => {
     try {
       await axios.delete(`${apiURL}/${id}`);
+      // Use of toast
+      toast.error("Todo deleted");
       fetchTasks();
     } catch (error) {
       console.log(error.message);
